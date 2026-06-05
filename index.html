@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estudo de Diferenciação Premium · BelaOn Moema</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0E0F13;
+  --bg2:#14161C;
+  --panel:#191C24;
+  --panel2:#1F232E;
+  --line:rgba(201,168,106,.14);
+  --line-soft:rgba(255,255,255,.06);
+  --gold:#C9A86A;
+  --gold-bright:#E2C485;
+  --rose:#C98B7E;
+  --txt:#ECEAE4;
+  --muted:#9C978D;
+  --muted2:#6E6A62;
+  --green:#7FB069;
+  --red:#C76B5E;
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --sans:'Inter',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:var(--sans);font-weight:300;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--gold);color:#0E0F13}
+
+/* ---------- Layout ---------- */
+.shell{display:grid;grid-template-columns:268px 1fr;min-height:100vh}
+nav.side{position:sticky;top:0;height:100vh;border-right:1px solid var(--line);background:linear-gradient(180deg,#101218,#0C0D11);padding:34px 26px;display:flex;flex-direction:column;gap:6px;overflow-y:auto}
+nav.side::-webkit-scrollbar{width:5px}nav.side::-webkit-scrollbar-thumb{background:var(--line)}
+.brand{font-family:var(--serif);font-size:27px;font-weight:700;letter-spacing:.5px;line-height:1.05;margin-bottom:2px}
+.brand b{color:var(--gold)}
+.brand-sub{font-size:10.5px;letter-spacing:3px;text-transform:uppercase;color:var(--muted2);margin-bottom:30px}
+.nav-label{font-size:9.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted2);margin:22px 0 8px}
+nav.side a{color:var(--muted);text-decoration:none;font-size:13.5px;padding:7px 12px;border-radius:7px;display:flex;align-items:center;gap:10px;transition:.18s;border-left:2px solid transparent}
+nav.side a:hover{color:var(--txt);background:rgba(201,168,106,.06)}
+nav.side a.active{color:var(--gold-bright);background:rgba(201,168,106,.09);border-left:2px solid var(--gold)}
+nav.side a .n{font-family:var(--serif);font-size:13px;color:var(--gold);width:16px;opacity:.7}
+.side-foot{margin-top:auto;padding-top:24px;font-size:11px;color:var(--muted2);line-height:1.7}
+
+main{padding:0;max-width:1180px}
+section{padding:78px 64px;border-bottom:1px solid var(--line-soft);scroll-margin-top:0}
+.eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.eyebrow::before{content:"";width:34px;height:1px;background:var(--gold);opacity:.6}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(40px,5.4vw,68px);line-height:1.02;letter-spacing:-.5px;margin-bottom:24px}
+h2{font-family:var(--serif);font-weight:600;font-size:clamp(30px,3.6vw,44px);line-height:1.08;margin-bottom:20px;letter-spacing:-.3px}
+h3{font-family:var(--serif);font-weight:600;font-size:25px;margin-bottom:10px;color:var(--gold-bright)}
+h4{font-size:14px;font-weight:600;letter-spacing:.3px;margin-bottom:6px}
+p{color:var(--muted);font-size:15.5px;margin-bottom:16px;max-width:74ch}
+p strong,li strong{color:var(--txt);font-weight:500}
+.lead{font-size:19px;color:#C9C5BC;font-weight:300;line-height:1.6;max-width:62ch}
+.gold{color:var(--gold-bright)}
+em{color:var(--rose);font-style:italic}
+small{font-size:12px;color:var(--muted2)}
+
+/* ---------- Hero ---------- */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative;background:
+  radial-gradient(900px 500px at 78% 12%,rgba(201,168,106,.10),transparent 60%),
+  radial-gradient(700px 600px at 8% 90%,rgba(201,139,126,.07),transparent 55%);
+  border-bottom:1px solid var(--line)}
+.hero h1{max-width:17ch}
+.hero .lead{margin-bottom:38px}
+.hero-meta{display:flex;gap:46px;flex-wrap:wrap;margin-top:30px;padding-top:30px;border-top:1px solid var(--line)}
+.hero-meta div span{display:block;font-family:var(--serif);font-size:34px;color:var(--gold-bright);line-height:1}
+.hero-meta div small{font-size:11.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted2);margin-top:6px;display:block}
+.scroll-hint{position:absolute;bottom:34px;left:64px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted2);display:flex;align-items:center;gap:10px}
+.scroll-hint .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+/* ---------- KPI grid ---------- */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:34px 0}
+.kpi{background:var(--panel);padding:28px 24px;transition:.25s}
+.kpi:hover{background:var(--panel2)}
+.kpi .v{font-family:var(--serif);font-size:42px;font-weight:700;color:var(--gold-bright);line-height:1}
+.kpi .v.sm{font-size:33px}
+.kpi .l{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.4}
+.kpi .src{font-size:10px;color:var(--muted2);margin-top:10px;letter-spacing:.5px}
+
+/* ---------- Thesis box ---------- */
+.thesis{background:linear-gradient(135deg,#1A1D26,#15171E);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:14px;padding:40px 46px;margin:30px 0}
+.thesis .q{font-family:var(--serif);font-size:27px;line-height:1.3;color:var(--txt);font-weight:500}
+.thesis .q b{color:var(--gold-bright);font-weight:600}
+
+/* ---------- Cards ---------- */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.card{background:var(--panel);border:1px solid var(--line-soft);border-radius:14px;padding:28px;transition:.25s;position:relative;overflow:hidden}
+.card:hover{border-color:var(--line);transform:translateY(-3px);box-shadow:0 18px 40px -22px rgba(0,0,0,.7)}
+.card .num{font-family:var(--serif);font-size:15px;color:var(--gold);border:1px solid var(--line);width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.card p{font-size:14px;margin-bottom:0}
+.card .tag{display:inline-block;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);background:rgba(201,168,106,.08);border:1px solid var(--line);padding:4px 10px;border-radius:20px;margin-top:14px}
+
+/* ---------- Case cards ---------- */
+.case{background:var(--panel);border:1px solid var(--line-soft);border-radius:16px;padding:0;overflow:hidden;margin-bottom:24px;transition:.25s}
+.case:hover{border-color:var(--line)}
+.case-head{display:flex;align-items:baseline;justify-content:space-between;padding:26px 32px 18px;border-bottom:1px solid var(--line-soft);flex-wrap:wrap;gap:8px}
+.case-head .name{font-family:var(--serif);font-size:30px;font-weight:700}
+.case-head .role{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold)}
+.case-body{padding:24px 32px 28px;display:grid;grid-template-columns:1.5fr 1fr;gap:30px}
+.case-body .stats{display:flex;flex-direction:column;gap:16px;border-left:1px solid var(--line);padding-left:26px}
+.case-body .stats .s .v{font-family:var(--serif);font-size:30px;color:var(--gold-bright);line-height:1}
+.case-body .stats .s .l{font-size:11.5px;color:var(--muted);margin-top:3px}
+.mech-line{font-size:13.5px;color:var(--muted);margin-top:12px;padding-left:18px;position:relative}
+.mech-line::before{content:"→";position:absolute;left:0;color:var(--gold)}
+
+/* ---------- Bar chart ---------- */
+.chart{margin:28px 0}
+.bar-row{display:grid;grid-template-columns:160px 1fr 70px;align-items:center;gap:16px;margin-bottom:14px}
+.bar-row .lbl{font-size:13px;color:var(--txt);text-align:right}
+.bar-track{height:26px;background:var(--bg2);border-radius:6px;overflow:hidden;position:relative}
+.bar-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,#8C7438,var(--gold));width:0;transition:width 1.3s cubic-bezier(.2,.8,.2,1)}
+.bar-fill.rose{background:linear-gradient(90deg,#9A5E52,var(--rose))}
+.bar-fill.dim{background:linear-gradient(90deg,#33363f,#4a4e59)}
+.bar-row .val{font-family:var(--serif);font-size:18px;color:var(--gold-bright);font-weight:600}
+.chart-cap{font-size:12px;color:var(--muted2);margin-top:8px}
+
+/* ---------- Psychology / mechanism table ---------- */
+.principle{display:grid;grid-template-columns:46px 1fr;gap:20px;padding:24px 0;border-bottom:1px solid var(--line-soft)}
+.principle:last-child{border-bottom:0}
+.principle .ic{font-family:var(--serif);font-size:24px;color:var(--gold);border:1px solid var(--line);border-radius:10px;width:46px;height:46px;display:flex;align-items:center;justify-content:center}
+.principle h4{font-size:17px;color:var(--txt);margin-bottom:6px}
+.principle p{font-size:14px;margin-bottom:8px}
+.principle .data{font-size:12.5px;color:var(--gold);letter-spacing:.3px}
+
+/* ---------- Playbook ---------- */
+.play{background:var(--panel);border:1px solid var(--line-soft);border-radius:14px;padding:26px 28px;margin-bottom:18px;transition:.2s}
+.play.done{opacity:.55}
+.play-head{display:flex;gap:16px;align-items:flex-start;cursor:pointer}
+.chk{flex-shrink:0;width:26px;height:26px;border:1.5px solid var(--gold);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--gold);transition:.2s;margin-top:2px}
+.play.done .chk{background:var(--gold);color:#0E0F13}
+.play-head .t{font-family:var(--serif);font-size:21px;font-weight:600;color:var(--txt)}
+.play.done .play-head .t{text-decoration:line-through;text-decoration-color:var(--muted2)}
+.play .phase{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:4px;display:block}
+.play-body{margin-left:42px;margin-top:14px}
+.play-body p{font-size:14px;margin-bottom:10px}
+.play-body ul{list-style:none;display:flex;flex-direction:column;gap:7px}
+.play-body li{font-size:13.5px;color:var(--muted);padding-left:20px;position:relative}
+.play-body li::before{content:"–";position:absolute;left:0;color:var(--gold)}
+.play-body .ref{font-size:12px;color:var(--gold);background:rgba(201,168,106,.07);border:1px solid var(--line);border-radius:8px;padding:8px 12px;margin-top:12px;display:inline-block}
+.progress-wrap{position:sticky;top:0;z-index:5;background:rgba(14,15,19,.85);backdrop-filter:blur(8px);padding:16px 0;margin-bottom:24px;border-bottom:1px solid var(--line)}
+.progress-wrap .row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.progress-wrap .row span{font-size:13px;color:var(--muted)}
+.progress-wrap .row b{font-family:var(--serif);font-size:22px;color:var(--gold-bright)}
+.pbar{height:6px;background:var(--bg2);border-radius:6px;overflow:hidden}
+.pbar div{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-bright));width:0;transition:.4s}
+
+/* ---------- Pull quote ---------- */
+.pull{font-family:var(--serif);font-size:30px;line-height:1.3;color:var(--txt);font-weight:500;max-width:24ch;margin:10px 0}
+.pull b{color:var(--gold-bright)}
+
+/* ---------- Insight strip ---------- */
+.insight{background:linear-gradient(135deg,rgba(201,139,126,.10),rgba(201,168,106,.06));border:1px solid var(--line);border-radius:14px;padding:30px 34px;margin:26px 0}
+.insight .k{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--rose);margin-bottom:12px}
+.insight p{color:var(--txt);font-size:16px;margin-bottom:0}
+
+/* ---------- Sources ---------- */
+.src-grid{columns:2;column-gap:40px}
+.src-grid a{display:block;color:var(--muted);font-size:12.5px;text-decoration:none;padding:7px 0;border-bottom:1px solid var(--line-soft);break-inside:avoid;transition:.15s}
+.src-grid a:hover{color:var(--gold-bright)}
+.src-grid a b{color:var(--txt);font-weight:500}
+
+.foot{padding:50px 64px;text-align:center;color:var(--muted2);font-size:12px}
+.foot .brand{font-size:18px;justify-content:center}
+
+@media(max-width:980px){
+  .shell{grid-template-columns:1fr}
+  nav.side{display:none}
+  section{padding:52px 26px}
+  .kpi-grid,.grid2,.grid3{grid-template-columns:1fr}
+  .case-body{grid-template-columns:1fr}
+  .case-body .stats{border-left:0;border-top:1px solid var(--line);padding-left:0;padding-top:18px;flex-direction:row;flex-wrap:wrap;gap:24px}
+  .src-grid{columns:1}
+  .scroll-hint{left:26px}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- ============ SIDEBAR ============ -->
+<nav class="side">
+  <div class="brand"><b>Bela</b>On <span style="font-weight:400">·</span></div>
+  <div class="brand-sub">Estudo Estratégico</div>
+
+  <div class="nav-label">O Estudo</div>
+  <a href="#hero" class="active"><span class="n">01</span> A Tese</a>
+  <a href="#mercado"><span class="n">02</span> O Mercado &amp; a Armadilha</a>
+  <a href="#mecanismos"><span class="n">03</span> Os 7 Mecanismos</a>
+
+  <div class="nav-label">Os Cases</div>
+  <a href="#apple"><span class="n">04</span> Apple</a>
+  <a href="#hermes"><span class="n">05</span> Hermès &amp; o Luxo</a>
+  <a href="#gucci"><span class="n">06</span> Gucci · Nike · Starbucks</a>
+
+  <div class="nav-label">A Ciência</div>
+  <a href="#psicologia"><span class="n">07</span> A Psicologia do Preço</a>
+  <a href="#dados"><span class="n">08</span> O Veredito dos Dados</a>
+
+  <div class="nav-label">Aplicação</div>
+  <a href="#belaon"><span class="n">09</span> BelaOn Moema</a>
+  <a href="#playbook"><span class="n">10</span> Playbook de Execução</a>
+  <a href="#fontes"><span class="n">11</span> Fontes</a>
+
+  <div class="side-foot">
+    Impulsiona · Junho 2026<br>
+    Dossiê confidencial<br>
+    <span style="color:var(--gold)">Diferenciação &gt; Desconto</span>
+  </div>
+</nav>
+
+<main>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="hero">
+  <div class="eyebrow">Como as grandes marcas escapam da guerra de preços</div>
+  <h1>Quem compete por <span class="gold">preço</span> perde.<br>Quem cria <em>desejo</em> dita o preço.</h1>
+  <p class="lead">Um estudo profundo sobre o mecanismo que permite à Apple, à Hermès e à Gucci cobrarem múltiplos do custo — e como a BelaOn Moema pode usar a mesma engenharia para nunca mais brigar por R$10 de desconto.</p>
+  <div class="hero-meta">
+    <div><span data-count="488.9" data-suffix=" bi">US$0</span><small>Valor da marca Apple · #1 mundo</small></div>
+    <div><span data-count="70" data-suffix="%">0%</span><small>Margem bruta Hermès</small></div>
+    <div><span data-count="86" data-suffix="%">0%</span><small>Pagam mais por experiência</small></div>
+    <div><span data-count="55" data-suffix=" mil">0</span><small>Novas clínicas no Brasil · Q1/25</small></div>
+  </div>
+  <div class="scroll-hint"><span class="dot"></span> Role para começar</div>
+</section>
+
+<!-- ============ MERCADO ============ -->
+<section id="mercado">
+  <div class="eyebrow">02 · O campo de batalha</div>
+  <h2>O mercado que mais cresce é também o que mais comoditiza</h2>
+  <p class="lead">A estética brasileira virou um oceano vermelho. Crescimento explosivo atrai uma enxurrada de novos entrantes — e, quando todo mundo oferece "o mesmo Botox", a única alavanca que sobra para o desavisado é <strong>baixar o preço</strong>. É exatamente aí que a margem morre.</p>
+
+  <div class="kpi-grid">
+    <div class="kpi"><div class="v">R$48<small style="font-size:18px"> bi</small></div><div class="l">Movimentados/ano pela estética no Brasil</div><div class="src">ABIHPEC</div></div>
+    <div class="kpi"><div class="v">+16,5%</div><div class="l">Crescimento do setor em 2024</div><div class="src">Estética &amp; Mercado</div></div>
+    <div class="kpi"><div class="v sm">+55 mil</div><div class="l">Novos estabelecimentos só no 1º tri/2025</div><div class="src">ABIHPEC</div></div>
+    <div class="kpi"><div class="v sm">50 mi</div><div class="l">Consumidores potenciais no país</div><div class="src">BCG</div></div>
+  </div>
+
+  <div class="grid2" style="margin-top:30px">
+    <div class="card">
+      <h3>A força que puxa para cima</h3>
+      <p>Mercado global de medicina estética: <strong>US$ 38 bi em 2024 → US$ 109,8 bi em 2035</strong>. O Brasil é o <strong>4º maior</strong> consumidor de beleza do mundo e líder na América Latina. Demanda não falta.</p>
+    </div>
+    <div class="card">
+      <h3>A força que puxa para baixo</h3>
+      <p>480 mil profissionais e dezenas de milhares de clínicas novas por trimestre. Quando o cliente não percebe diferença, ele escolhe pelo <strong>menor preço</strong>. A oferta cresce mais rápido que a diferenciação.</p>
+    </div>
+  </div>
+
+  <div class="insight">
+    <div class="k">A armadilha da comoditização</div>
+    <p>Competir por preço é o único jogo em que o <strong>vencedor também sai ferido</strong>: cada desconto que você dá, o concorrente cobre — e os dois afundam a margem juntos. A saída não é ser mais barato. É fazer o preço deixar de ser o critério de decisão.</p>
+  </div>
+</section>
+
+<!-- ============ MECANISMOS ============ -->
+<section id="mecanismos">
+  <div class="eyebrow">03 · A engenharia da diferenciação</div>
+  <h2>Os 7 mecanismos que blindam uma marca da guerra de preços</h2>
+  <p class="lead">Apple, Hermès, Nike e Starbucks parecem negócios diferentes. Mas, por baixo, operam o <strong>mesmo sistema</strong>. Estes são os sete componentes — o "o quê", e logo abaixo o "porquê".</p>
+
+  <div class="grid3" style="margin-top:34px">
+    <div class="card">
+      <div class="num">1</div>
+      <h4>Vender transformação, não produto</h4>
+      <p>A Apple não vende um chip; vende criatividade. A Nike não vende tênis; vende vitória. O cliente paga pela <strong>versão melhor de si mesmo</strong> que o produto promete.</p>
+      <span class="tag">Identidade</span>
+    </div>
+    <div class="card">
+      <div class="num">2</div>
+      <h4>Ancorar alto e oferecer escolha</h4>
+      <p>Uma âncora de preço elevada faz tudo abaixo dela parecer razoável. A arquitetura "Bom-Melhor-Ótimo" empurra o cliente ao tier do meio — sem nunca falar de "barato".</p>
+      <span class="tag">Preço</span>
+    </div>
+    <div class="card">
+      <div class="num">3</div>
+      <h4>Escassez &amp; exclusividade</h4>
+      <p>A Hermès produz menos do que poderia, de propósito. Lista de espera vira status. O que é difícil de obter é <strong>desejado</strong> — e desejo não pechincha.</p>
+      <span class="tag">Desejo</span>
+    </div>
+    <div class="card">
+      <div class="num">4</div>
+      <h4>A experiência É o produto</h4>
+      <p>86% dos clientes pagam mais por uma experiência superior. O ritual, o ambiente, o cuidado: tudo isso é percebido como valor — e justifica o prêmio.</p>
+      <span class="tag">Experiência</span>
+    </div>
+    <div class="card">
+      <div class="num">5</div>
+      <h4>Narrativa &amp; desejabilidade</h4>
+      <p>A Gucci investe pesado para "reacender a desejabilidade". Storytelling, ícones e estética constroem uma marca que as pessoas querem <strong>pertencer</strong>, não só comprar.</p>
+      <span class="tag">Marca</span>
+    </div>
+    <div class="card">
+      <div class="num">6</div>
+      <h4>Autoridade, prova &amp; segurança</h4>
+      <p>Resultados visíveis, especialista reconhecido, padrão de segurança. A confiança dissolve o medo — e medo é o que faz o cliente hesitar diante do preço alto.</p>
+      <span class="tag">Confiança</span>
+    </div>
+    <div class="card">
+      <div class="num">7</div>
+      <h4>Disciplina &amp; recorrência</h4>
+      <p>Nunca competir por preço, jamais. E transformar a venda única em relação contínua (planos, memberships): isso protege a margem e multiplica o LTV.</p>
+      <span class="tag">Blindagem</span>
+    </div>
+  </div>
+
+  <div class="thesis" style="margin-top:38px">
+    <div class="q">O porquê, em uma frase: marcas fortes cobram mais não porque o produto é radicalmente diferente, mas porque <b>a percepção de valor é mais forte</b>. Elas vendem para o <b>System 1</b> — a mente rápida, emocional, que decide antes de calcular.</div>
+  </div>
+</section>
+
+<!-- ============ APPLE ============ -->
+<section id="apple">
+  <div class="eyebrow">04 · Case</div>
+  <h2>Apple — a disciplina de jamais brigar por preço</h2>
+  <p class="lead">A Apple nunca foi a opção mais barata, e nunca quis ser. Em vez de volume, escolheu <strong>margem e ecossistema</strong>. O resultado é a marca mais valiosa do planeta — e um poder de precificação que rivais com produto similar não conseguem copiar.</p>
+
+  <div class="case">
+    <div class="case-head">
+      <div><div class="name">Apple</div></div>
+      <div class="role">Premium tecnológico · #1 Interbrand</div>
+    </div>
+    <div class="case-body">
+      <div>
+        <h4 class="gold">O que faz</h4>
+        <p>Prioriza qualidade percebida, design e coesão do ecossistema acima do volume. Cada produto é uma porta de entrada para um sistema que prende o cliente.</p>
+        <h4 class="gold" style="margin-top:14px">Por que funciona</h4>
+        <p>59% de lealdade entre usuários de iPhone + efeito de rede entre dispositivos = poder de precificação estrutural. O cliente não compara preço de celular; compara "sair ou ficar no meu mundo".</p>
+        <div class="mech-line">Vende identidade ("Think Different"), não especificação técnica</div>
+        <div class="mech-line">Serviços (24% da receita) criam recorrência e margem altíssima</div>
+        <div class="mech-line">Mesmo em mercado maduro, iPhone cresceu 13,5% a/a — sem cortar preço</div>
+      </div>
+      <div class="stats">
+        <div class="s"><div class="v">US$ 488,9 bi</div><div class="l">Valor de marca — vale quase tanto quanto as marcas #50 a #100 somadas</div></div>
+        <div class="s"><div class="v">~46%</div><div class="l">Margem bruta consolidada (serviços ~74%)</div></div>
+        <div class="s"><div class="v">59%</div><div class="l">Lealdade dos usuários de iPhone</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="insight">
+    <div class="k">Lição para a BelaOn</div>
+    <p>O equivalente do "ecossistema Apple" numa clínica é a <strong>jornada de cuidado contínuo</strong>: protocolo → manutenção → membership. Quem entra no sistema BelaOn não compara o preço de um Botox avulso lá fora — ele compara perder a sua relação de confiança.</p>
+  </div>
+</section>
+
+<!-- ============ HERMÈS ============ -->
+<section id="hermes">
+  <div class="eyebrow">05 · Case</div>
+  <h2>Hermès — a escassez como arma de margem</h2>
+  <p class="lead">Enquanto o luxo desacelerava em 2024, a Hermès <strong>aumentou preços e cresceu acima dos rivais</strong>. O segredo não é o couro: é uma escassez projetada que torna o desejo impossível de saciar com mais oferta. Em 2025, sua margem operacional (&gt;40%) era quase o dobro da LVMH (~21%).</p>
+
+  <div class="chart card" style="padding:32px">
+    <h4 class="gold" style="font-size:16px;margin-bottom:20px">Margem operacional — o prêmio da escassez</h4>
+    <div class="bar-row"><div class="lbl">Hermès</div><div class="bar-track"><div class="bar-fill" data-w="100"></div></div><div class="val">&gt;40%</div></div>
+    <div class="bar-row"><div class="lbl">LVMH</div><div class="bar-track"><div class="bar-fill dim" data-w="52"></div></div><div class="val">~21%</div></div>
+    <div class="bar-row"><div class="lbl">Margem bruta Hermès</div><div class="bar-track"><div class="bar-fill" data-w="100"></div></div><div class="val">70,3%</div></div>
+    <div class="chart-cap">A escassez controlada não é limitação de fábrica — é estratégia de margem.</div>
+  </div>
+
+  <div class="grid2" style="margin-top:26px">
+    <div class="card">
+      <h3>Como a Hermès faz</h3>
+      <p style="margin-bottom:10px">— Produção limitada em 19 ateliês franceses, feita à mão.<br>— <strong>Sem linhas de difusão, sem varejo de massa.</strong><br>— Listas de espera para a Birkin: o cliente é "escolhido".<br>— Aumentos de preço anuais que reforçam, não afastam, o desejo.</p>
+    </div>
+    <div class="card">
+      <h3>Por que isso desarma o preço</h3>
+      <p style="margin-bottom:10px">Quando a demanda não pode ser satisfeita aumentando a oferta, o preço deixa de ser negociável. A escassez cria uma demanda <strong>estrutural</strong>. Pechinchar uma Birkin é impensável — você está feliz só por ter acesso.</p>
+    </div>
+  </div>
+
+  <p style="margin-top:24px"><strong>Dois arquétipos do luxo</strong> — vale entender em qual a BelaOn quer jogar: as <span class="gold">"casas-destino"</span> (Dolce &amp; Gabbana, Versace) competem por escala e amplitude de categoria; os <span class="gold">"especialistas focados"</span> (Armani, Etro) vencem curando um portfólio seletivo e de alto valor, sem saturar o mercado. <em>Para uma clínica boutique em Moema, o caminho é o especialista focado: poucos protocolos, dominados com maestria.</em></p>
+</section>
+
+<!-- ============ GUCCI / NIKE / STARBUCKS ============ -->
+<section id="gucci">
+  <div class="eyebrow">06 · Cases</div>
+  <h2>Desejabilidade, narrativa e experiência</h2>
+  <p class="lead">Três marcas, um princípio: o produto é só o pretexto. O que se vende é <strong>significado</strong>.</p>
+
+  <div class="case">
+    <div class="case-head"><div class="name">Gucci</div><div class="role">Kering · desejabilidade</div></div>
+    <div class="case-body">
+      <div>
+        <h4 class="gold">A jogada</h4>
+        <p>A Kering decidiu <strong>elevar o investimento de marca para "reacender a desejabilidade"</strong> da Gucci — assumindo que havia cortado demais o que "fala com o consumidor". Storytelling distintivo, ícones globais, experiências imersivas e colaborações limitadas mantêm a exclusividade viva.</p>
+        <div class="mech-line">Desejabilidade é tratada como ativo a ser gerido, não consequência</div>
+        <div class="mech-line">Edições limitadas renovam a escassez e a vontade de pertencer</div>
+      </div>
+      <div class="stats">
+        <div class="s"><div class="v">Desejo</div><div class="l">O "core element" que a Kering protege acima de tudo</div></div>
+        <div class="s"><div class="v">Limited</div><div class="l">Drops e colabs sustentam exclusividade percebida</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="case">
+    <div class="case-head"><div class="name">Nike</div><div class="role">Value-based pricing</div></div>
+    <div class="case-body">
+      <div>
+        <h4 class="gold">A jogada</h4>
+        <p>Preço definido pelo <strong>valor percebido, não pelo custo</strong>. Décadas de brand equity construídas com atletas de elite, inovação contada como história e propósito cultural. Arquitetura de produto em camadas + drops de escassez para lançamentos.</p>
+        <div class="mech-line">Storytelling emocional transfere valor cultural ao produto</div>
+        <div class="mech-line">Tiers de produto: entrada acessível + topo aspiracional</div>
+      </div>
+      <div class="stats">
+        <div class="s"><div class="v">Just&nbsp;Do&nbsp;It</div><div class="l">Vende performance e identidade, não calçado</div></div>
+        <div class="s"><div class="v">#14</div><div class="l">Entre as marcas mais valiosas do mundo (Interbrand)</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="case">
+    <div class="case-head"><div class="name">Starbucks</div><div class="role">A experiência como produto</div></div>
+    <div class="case-body">
+      <div>
+        <h4 class="gold">A jogada</h4>
+        <p>Transformou café em <strong>ritual, estilo de vida e autoexpressão</strong>. As Reserve Roasteries são templos imersivos de craft e design que elevam o valor percebido. Vende lealdade e conexão emocional — o preço premium é consequência, não obstáculo.</p>
+        <div class="mech-line">O "terceiro lugar": ambiente vira parte do que se compra</div>
+        <div class="mech-line">Personalização (seu nome no copo) cria pertencimento diário</div>
+      </div>
+      <div class="stats">
+        <div class="s"><div class="v">Ritual</div><div class="l">Café vira identidade, não commodity</div></div>
+        <div class="s"><div class="v">+16%</div><div class="l">O quanto clientes pagam a mais por experiência superior (PwC)</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PSICOLOGIA ============ -->
+<section id="psicologia">
+  <div class="eyebrow">07 · A ciência por trás</div>
+  <h2>A psicologia que faz o preço deixar de importar</h2>
+  <p class="lead">Tudo isso funciona porque o cérebro humano não calcula valor de forma racional. Ele usa <strong>atalhos</strong> — e marcas premium são engenheiras desses atalhos.</p>
+
+  <div style="margin-top:20px">
+    <div class="principle">
+      <div class="ic">⚓</div>
+      <div>
+        <h4>Ancoragem (Tversky &amp; Kahneman, 1974)</h4>
+        <p>O primeiro preço que o cliente vê vira a referência de tudo. Marcas de luxo cravam uma âncora alta para que o restante pareça acessível.</p>
+        <div class="data">Preço-âncora aumenta o valor percebido em 22–35% vs. mostrar só o preço de venda · Journal of Marketing Research, 2025</div>
+      </div>
+    </div>
+    <div class="principle">
+      <div class="ic">◑</div>
+      <div>
+        <h4>Efeito chamariz (decoy)</h4>
+        <p>Introduzir uma opção propositalmente menos atraente faz o alvo desejado parecer o "óbvio". Por isso o tier do meio quase sempre vence.</p>
+        <div class="data">Estrutura Bom-Melhor-Ótimo aumenta o ticket médio em 15–25% — a maioria escolhe o meio</div>
+      </div>
+    </div>
+    <div class="principle">
+      <div class="ic">⚡</div>
+      <div>
+        <h4>System 1 vs. System 2 (Kahneman)</h4>
+        <p>O System 1 é rápido, instintivo e emocional; o System 2 é lento e calculista. A decisão de desejo acontece no System 1 — <strong>antes</strong> de o preço ser racionalizado. Marca forte vende para o System 1.</p>
+        <div class="data">Emoção decide; razão apenas justifica a decisão já tomada</div>
+      </div>
+    </div>
+    <div class="principle">
+      <div class="ic">★</div>
+      <div>
+        <h4>O prêmio da experiência</h4>
+        <p>Experiência supera marca e preço somados como motor de lealdade. Um cliente bem tratado não só paga mais — ele volta e indica.</p>
+        <div class="data">86% pagam mais por experiência superior · 87% que tiveram ótima experiência recompram (vs. 18% dos mal atendidos) · PwC</div>
+      </div>
+    </div>
+    <div class="principle">
+      <div class="ic">⚠</div>
+      <div>
+        <h4>O custo invisível do deslize</h4>
+        <p>O prêmio é frágil: 1 em cada 3 clientes abandona uma marca que ama após <strong>uma única</strong> experiência ruim; 92% somem após duas ou três. Premium exige consistência absoluta.</p>
+        <div class="data">A experiência premium se constrói em anos e se perde em um atendimento · PwC</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DADOS ============ -->
+<section id="dados">
+  <div class="eyebrow">08 · O veredito dos dados</div>
+  <h2>O que os números provam</h2>
+  <p class="lead">Diferenciação não é estética nem opinião — é a variável que melhor explica margem. Veja o prêmio que clientes declaram estar dispostos a pagar, e o abismo de margem entre quem comoditiza e quem diferencia.</p>
+
+  <div class="chart card" style="padding:34px;margin-top:26px">
+    <h4 class="gold" style="font-size:16px;margin-bottom:22px">Disposição a pagar mais por experiência superior</h4>
+    <div class="bar-row"><div class="lbl">Pagam mais (sim/não)</div><div class="bar-track"><div class="bar-fill" data-w="86"></div></div><div class="val">86%</div></div>
+    <div class="bar-row"><div class="lbl">Prêmio médio de preço</div><div class="bar-track"><div class="bar-fill rose" data-w="16"></div></div><div class="val">+16%</div></div>
+    <div class="bar-row"><div class="lbl">Lealdade ditada por CX</div><div class="bar-track"><div class="bar-fill" data-w="73"></div></div><div class="val">73%</div></div>
+    <div class="bar-row"><div class="lbl">Recompram após ótima exp.</div><div class="bar-track"><div class="bar-fill" data-w="87"></div></div><div class="val">87%</div></div>
+    <div class="chart-cap">Fonte: PwC · "Customer Experience Is Everything"</div>
+  </div>
+
+  <div class="chart card" style="padding:34px;margin-top:24px">
+    <h4 class="gold" style="font-size:16px;margin-bottom:22px">O prêmio de margem de quem não brigou por preço</h4>
+    <div class="bar-row"><div class="lbl">Hermès (bruta)</div><div class="bar-track"><div class="bar-fill" data-w="70"></div></div><div class="val">70%</div></div>
+    <div class="bar-row"><div class="lbl">Apple (consolidada)</div><div class="bar-track"><div class="bar-fill" data-w="46"></div></div><div class="val">~46%</div></div>
+    <div class="bar-row"><div class="lbl">Hermès (operacional)</div><div class="bar-track"><div class="bar-fill" data-w="42"></div></div><div class="val">&gt;40%</div></div>
+    <div class="bar-row"><div class="lbl">LVMH (operacional)</div><div class="bar-track"><div class="bar-fill dim" data-w="21"></div></div><div class="val">~21%</div></div>
+    <div class="chart-cap">Margem não é sorte: é o preço que o mercado paga pela diferenciação percebida.</div>
+  </div>
+
+  <div class="pull" style="margin:40px 0 0">"Marcas fortes cobram mais consistentemente — não porque o produto é radicalmente diferente, mas porque a <b>percepção de valor</b> é mais forte."</div>
+  <small>— Síntese da pesquisa de pricing competitivo (B2B International, Shopify, FasterCapital)</small>
+</section>
+
+<!-- ============ BELAON ============ -->
+<section id="belaon">
+  <div class="eyebrow">09 · Aplicação direta</div>
+  <h2>O que tudo isso significa para a BelaOn Moema</h2>
+  <p class="lead">Moema é um bairro nobre cercado de clínicas. Brigar pelo Botox mais barato é entregar a margem para os 55 mil concorrentes novos. A BelaOn tem o terreno perfeito para jogar o jogo da Hermès, não o do atacado.</p>
+
+  <div class="insight" style="margin-top:8px">
+    <div class="k">Prova local — a própria BelaOn já viu isso funcionar</div>
+    <p>Na campanha de junho, o anúncio <strong>sem preço (AD03)</strong> venceu o anúncio de dor com preço (AD01): 4 leads a R$23 vs. R$124 sem lead. Tirar o foco do preço já performou melhor no seu próprio público — este estudo só explica o porquê e mostra como escalar isso de forma estrutural.</p>
+  </div>
+
+  <div class="grid2" style="margin-top:30px">
+    <div class="card">
+      <div class="num">①</div>
+      <h4>De "procedimento por R$X" para transformação</h4>
+      <p>Pare de vender "Botox R$599,90". Venda <strong>"a confiança de se ver no espelho e gostar"</strong>. O preço continua existindo — mas deixa de ser o protagonista da comunicação. (System 1 &gt; planilha.)</p>
+    </div>
+    <div class="card">
+      <div class="num">②</div>
+      <h4>Esteira Bom-Melhor-Ótimo</h4>
+      <p>O Botox a R$599,90 vira o <strong>tier de entrada</strong>, não a oferta solta. Acima dele: protocolo facial completo e, no topo, membership anual de manutenção. A âncora alta faz o protocolo do meio parecer o óbvio.</p>
+    </div>
+    <div class="card">
+      <div class="num">③</div>
+      <h4>A experiência boutique como produto</h4>
+      <p>Ritual de recepção, ambiente, brinde, follow-up pós-procedimento. É o que justifica os +16% de prêmio e faz 87% voltarem. Numa clínica, a <strong>experiência é metade do resultado percebido</strong>.</p>
+    </div>
+    <div class="card">
+      <div class="num">④</div>
+      <h4>Escassez &amp; exclusividade</h4>
+      <p>Agenda limitada da especialista, "Protocolo Assinatura BelaOn", datas exclusivas de reinauguração. O que tem vaga sempre disponível parece commodity; o que tem lista, parece desejável.</p>
+    </div>
+    <div class="card">
+      <div class="num">⑤</div>
+      <h4>Autoridade, segurança &amp; conformidade</h4>
+      <p>Responsável técnico, técnica dominada, <strong>conformidade CFM 2.336/2023</strong>. Isso separa a BelaOn da "clínica de fundo de quintal" e dissolve o medo que faz o cliente hesitar diante do ticket alto.</p>
+    </div>
+    <div class="card">
+      <div class="num">⑥</div>
+      <h4>Recorrência que blinda a margem</h4>
+      <p>Membership de manutenção transforma venda única em LTV previsível. Quem está no plano BelaOn não cota preço de Botox na concorrência — exatamente como ninguém troca de ecossistema por R$50.</p>
+    </div>
+  </div>
+
+  <div class="thesis" style="margin-top:34px">
+    <div class="q">O posicionamento-alvo da BelaOn: a <b>especialista focada</b> de Moema — poucos protocolos, dominados com maestria, vendidos como transformação e entregues como experiência. <b>Nunca a mais barata. Sempre a mais desejada.</b></div>
+  </div>
+</section>
+
+<!-- ============ PLAYBOOK ============ -->
+<section id="playbook">
+  <div class="eyebrow">10 · Mãos à obra</div>
+  <h2>Playbook de execução</h2>
+  <p class="lead">Sete movimentos concretos, em ordem de prioridade. Marque conforme executa — seu progresso fica salvo neste navegador.</p>
+
+  <div class="progress-wrap">
+    <div class="row"><span>Progresso da transformação BelaOn</span><b id="pcount">0 / 7</b></div>
+    <div class="pbar"><div id="pbar"></div></div>
+  </div>
+
+  <div class="play" data-id="p1">
+    <div class="play-head"><div class="chk">✓</div><div><span class="phase">Comunicação · agora</span><div class="t">Reescrever toda a comunicação para transformação</div></div></div>
+    <div class="play-body">
+      <p>Tirar preço do centro de anúncios, bio e atendimento. Cada peça responde "quem você se torna", não "quanto custa".</p>
+      <ul>
+        <li>Headlines de identidade ("A melhor versão de você começa aqui")</li>
+        <li>Roteiros UGC nativos de desejo (skill <em>roteirista-ugc-estetica</em>)</li>
+        <li>Banir "promoção", "mais barato", "imperdível" do vocabulário da marca</li>
+      </ul>
+      <span class="ref">Mecanismos 1 e 5 · Apple, Nike, Gucci</span>
+    </div>
+  </div>
+
+  <div class="play" data-id="p2">
+    <div class="play-head"><div class="chk">✓</div><div><span class="phase">Oferta · semana 1</span><div class="t">Montar a esteira Bom-Melhor-Ótimo</div></div></div>
+    <div class="play-body">
+      <p>Criar 3 níveis com âncora alta no topo. O Botox avulso vira a porta de entrada.</p>
+      <ul>
+        <li><strong>Bom:</strong> procedimento avulso (Botox R$599,90)</li>
+        <li><strong>Melhor:</strong> protocolo facial completo — o tier que você quer vender</li>
+        <li><strong>Ótimo:</strong> membership anual / assinatura BelaOn (âncora)</li>
+      </ul>
+      <span class="ref">Mecanismo 2 · ancoragem + decoy (+15–25% no ticket)</span>
+    </div>
+  </div>
+
+  <div class="play" data-id="p3">
+    <div class="play-head"><div class="chk">✓</div><div><span class="phase">Experiência · semana 2</span><div class="t">Desenhar o ritual de experiência boutique</div></div></div>
+    <div class="play-body">
+      <p>Mapear cada ponto de contato como se fosse um Starbucks Reserve da estética.</p>
+      <ul>
+        <li>Recepção, bebida de boas-vindas, ambiente sensorial</li>
+        <li>Mensagem de follow-up pós-procedimento (cuidado percebido)</li>
+        <li>Pequeno mimo de marca na saída (gera indicação e recompra)</li>
+      </ul>
+      <span class="ref">Mecanismo 4 · +16% de prêmio, 87% recompram</span>
+    </div>
+  </div>
+
+  <div class="play" data-id="p4">
+    <div class="play-head"><div class="chk">✓</div><div><span class="phase">Desejo · semana 2</span><div class="t">Criar escassez real e honesta</div></div></div>
+    <div class="play-body">
+      <p>Limitar oferta de propósito para construir desejo — sem inventar urgência falsa.</p>
+      <ul>
+        <li>Agenda limitada da especialista (poucas vagas/semana)</li>
+        <li>"Protocolo Assinatura BelaOn" exclusivo, em edição</li>
+        <li>Datas de reinauguração com número fechado de vagas</li>
+      </ul>
+      <span class="ref">Mecanismo 3 · Hermès, Gucci (drops)</span>
+    </div>
+  </div>
+
+  <div class="play" data-id="p5">
+    <div class="play-head"><div class="chk">✓</div><div><span class="phase">Confiança · semana 3</span><div class="t">Tornar autoridade e segurança visíveis</div></div></div>
+    <div class="play-body">
+      <p>Transformar credibilidade em ativo de marketing — é o que dissolve a objeção de preço.</p>
+      <ul>
+        <li>Responsável técnico e formação em destaque</li>
+        <li>Conformidade CFM 2.336/2023 como selo de confiança</li>
+        <li>Antes/depois em conformidade + depoimentos reais</li>
+      </ul>
+      <span class="ref">Mecanismo 6 · confiança &gt; medo</span>
+    </div>
+  </div>
+
+  <div class="play" data-id="p6">
+    <div class="play-head"><div class="chk">✓</div><div><span class="phase">LTV · mês 1</span><div class="t">Lançar o programa de recorrência</div></div></div>
+    <div class="play-body">
+      <p>Converter clientes em membros. Previsibilidade de caixa + blindagem contra a concorrência por preço.</p>
+      <ul>
+        <li>Plano de manutenção mensal/anual com benefícios exclusivos</li>
+        <li>Fila prioritária e condições de membro (não "desconto", e sim acesso)</li>
+        <li>Medir LTV e taxa de recompra, não só CPL</li>
+      </ul>
+      <span class="ref">Mecanismo 7 · Apple (serviços), medicina estética (memberships)</span>
+    </div>
+  </div>
+
+  <div class="play" data-id="p7">
+    <div class="play-head"><div class="chk">✓</div><div><span class="phase">Disciplina · sempre</span><div class="t">Decretar a regra de ouro: nunca competir por preço</div></div></div>
+    <div class="play-body">
+      <p>A diferenciação só funciona com disciplina absoluta. Um deslize derruba o posicionamento.</p>
+      <ul>
+        <li>Diante de "tá caro": responder com valor e segurança, nunca com desconto</li>
+        <li>Se precisar adoçar, oferecer <strong>mais valor</strong> (brinde, bônus), não menos preço</li>
+        <li>Medir custo por lead <em>qualificado</em>, não por conversa barata</li>
+      </ul>
+      <span class="ref">Mecanismo 7 · a regra que a Apple nunca quebrou</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FONTES ============ -->
+<section id="fontes">
+  <div class="eyebrow">11 · Lastro</div>
+  <h2>Fontes</h2>
+  <p>Pesquisa de mercado conduzida em junho de 2026. Dados de relatórios públicos, filings e estudos setoriais.</p>
+  <div class="src-grid" style="margin-top:22px">
+    <a href="https://www.interbrand.com/best-global-brands/" target="_blank"><b>Interbrand</b> — Best Global Brands 2024 (Apple US$488,9 bi, #1)</a>
+    <a href="https://www.ainvest.com/news/apple-premium-pricing-strategy-catalyst-sustained-shareholder-2509/" target="_blank"><b>AInvest</b> — Apple's Premium Pricing Strategy</a>
+    <a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000320193" target="_blank"><b>SEC / Apple 8-K</b> — Filings FY2024–FY2025</a>
+    <a href="https://investomine.substack.com/p/hermes-a-unique-luxury-powerhouse" target="_blank"><b>Investomine</b> — Hermès: Untouchable Profit Margins (70,3% bruta)</a>
+    <a href="https://www.ainvest.com/news/herm-ultimate-bet-luxury-exceptionalism-challenging-market-2505/" target="_blank"><b>AInvest</b> — Hermès: The Ultimate Bet on Luxury Exceptionalism</a>
+    <a href="https://www.highpoint-associates.com/2025/08/luxury-cant-live-on-scarcity-alone/" target="_blank"><b>HighPoint</b> — Luxury Can't Live on Scarcity Alone</a>
+    <a href="https://www.marketingweek.com/gucci-brand-investment-desirability/" target="_blank"><b>Marketing Week</b> — Gucci: reignite desirability</a>
+    <a href="https://www.flipflow.io/en/blog-en/pricing-assortment-strategies-of-europe-luxury-icons/" target="_blank"><b>Flipflow</b> — Pricing &amp; assortment dos ícones do luxo (Armani vs. D&amp;G)</a>
+    <a href="https://themarketingjuice.com/nike-pricing-strategy/" target="_blank"><b>Marketing Juice</b> — Nike Pricing Strategy (value-based)</a>
+    <a href="https://www.blankboard.studio/originals/blog/starbucks-marketing-strategy" target="_blank"><b>Blankboard</b> — Starbucks Marketing Strategy</a>
+    <a href="https://visionpoint.systems/statistic/86-of-the-buyers-are-willing-to-pay-more-for-better-customer-experience/" target="_blank"><b>PwC</b> — 86% pagam mais por melhor experiência (+16%)</a>
+    <a href="https://www.renascence.io/journal/key-customer-experience-cx-statistics-you-need-to-know-in-2025" target="_blank"><b>Renascence</b> — CX Statistics 2025 (87% recompram)</a>
+    <a href="https://sites.lsa.umich.edu/mje/2024/05/06/pricing-psychology-deciphering-consumer-behavior/" target="_blank"><b>Michigan Journal of Economics</b> — Pricing Psychology</a>
+    <a href="https://www.leadalchemists.com/marketing-psychology/anchoring-effect/" target="_blank"><b>Lead Alchemists</b> — The Anchoring Effect (Tversky &amp; Kahneman)</a>
+    <a href="https://esteticaemercado.com.br/noticia/mercado/mercado-de-saude-e-estetica-cresce-165-em-2024-e-mantem-crescimento-em-2025/" target="_blank"><b>Estética &amp; Mercado / ABIHPEC</b> — +16,5% em 2024, R$48 bi/ano</a>
+    <a href="https://www.prnewswire.com/news-releases/medical-aesthetics-market-to-surge-from-us-18-48-billion-in-2024-to-us-55-99-billion-by-2033-as-demand-for-non-invasive-cosmetic-procedures-explodes--datam-intelligence-302579864.html" target="_blank"><b>DataM Intelligence</b> — Medical Aesthetics Market (US$38bi→109,8bi)</a>
+    <a href="https://qsight.guidepoint.com/blog/trends-reshaping-the-medical-aesthetics-industry/" target="_blank"><b>Qsight</b> — Boutique clinics &amp; premium positioning</a>
+    <a href="https://www.b2binternational.com/publications/differentiate/" target="_blank"><b>B2B International</b> — How to Avoid Competing on Price</a>
+    <a href="https://www.shopify.com/blog/competitive-pricing" target="_blank"><b>Shopify</b> — Competitive Pricing: Avoid Price Wars</a>
+  </div>
+</section>
+
+<div class="foot">
+  <div class="brand" style="display:flex"><b>Bela</b>On&nbsp;Moema</div>
+  <p style="margin:14px auto 0;max-width:50ch">Estudo de diferenciação premium · Impulsiona · Junho 2026<br>
+  <span class="gold">"Quem compete por preço perde. Quem cria desejo dita o preço."</span></p>
+</div>
+
+</main>
+</div>
+
+<script>
+// ---- Active nav on scroll ----
+const links=[...document.querySelectorAll('nav.side a')];
+const secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){const id='#'+e.target.id;links.forEach(l=>l.classList.toggle('active',l.getAttribute('href')===id));}});},{rootMargin:'-45% 0px -50% 0px'});
+secs.forEach(s=>s&&io.observe(s));
+
+// ---- Animated counters ----
+function animate(el){
+  const t=parseFloat(el.dataset.count),suf=el.dataset.suffix||'';
+  let s=0,dur=1400,start=null;
+  const dec=(t%1!==0)?1:0;
+  function step(ts){if(!start)start=ts;const p=Math.min((ts-start)/dur,1);const e=1-Math.pow(1-p,3);
+    el.textContent=(t*e).toFixed(dec).replace('.',',')+suf;
+    if(p<1)requestAnimationFrame(step);else el.textContent=t.toFixed(dec).replace('.',',')+suf;}
+  requestAnimationFrame(step);
+}
+const cio=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){animate(e.target);cio.unobserve(e.target);}});},{threshold:.6});
+document.querySelectorAll('[data-count]').forEach(el=>cio.observe(el));
+
+// ---- Bars fill on view ----
+const bio=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.style.width=e.target.dataset.w+'%';bio.unobserve(e.target);}});},{threshold:.4});
+document.querySelectorAll('.bar-fill').forEach(b=>bio.observe(b));
+
+// ---- Playbook checklist + persistence ----
+const KEY='belaon_playbook_v1';
+let state=JSON.parse(localStorage.getItem(KEY)||'{}');
+const plays=[...document.querySelectorAll('.play')];
+function refresh(){
+  let done=0;
+  plays.forEach(p=>{const id=p.dataset.id;if(state[id]){p.classList.add('done');done++;}else p.classList.remove('done');});
+  document.getElementById('pcount').textContent=done+' / '+plays.length;
+  document.getElementById('pbar').style.width=(done/plays.length*100)+'%';
+}
+plays.forEach(p=>{p.querySelector('.play-head').addEventListener('click',()=>{const id=p.dataset.id;state[id]=!state[id];localStorage.setItem(KEY,JSON.stringify(state));refresh();});});
+refresh();
+</script>
+</body>
+</html>
